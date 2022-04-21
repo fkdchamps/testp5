@@ -37,7 +37,6 @@ const productsPromise = fetch("http://localhost:3000/api/products");
       "<p class='productDescription'>" + descript + "</p>";
       newAnchor.appendChild(newArticle);
     }
-    
   })
   .catch(function(err) {
     console.log("Une erreur est survenue")
