@@ -2,7 +2,7 @@
 
 const urlObj = new URL(document.location.href);//on transforme la référence d'url en Objet URL exploitable par attributs
 const id = urlObj.searchParams.get("id");//on isole l'attribut d'identification
-
+let price = 0;
 /* requete du produit */
 fetch("http://localhost:3000/api/products/" + id)
   .then(function(res) {
@@ -14,7 +14,7 @@ fetch("http://localhost:3000/api/products/" + id)
     .then(function(value) {
       /* affectations attributs*/
       let productId = value._id;
-      let price = value.price;
+      price = value.price;
       let imgsrc = value.imageUrl;
       let kanapName = value.name;
       let imgAlt = value.altTxt + ", " + kanapName;
@@ -67,7 +67,7 @@ buttonCart.addEventListener('click', function(event) { // On écoute l'événeme
 
   /* création panier-tableau et produit en cours */
   let cartridge = [];
-  let product = {color: color, quantity: quantity, id: id};
+  let product = {color: color, quantity: quantity, id: id, price: price};
 
   /* vérif quantité dans les normes admissibles et implémentation de panier*/
   if (product.quantity >= 1 && product.quantity <= 100 && product.color != "") {
