@@ -6,6 +6,8 @@ console.log(cartridge);
 
 /* extraire pour chaque cellule l'objet produit en parcourant le tableau et insérer les éléments dans le DOM*/
 let i = 0;
+let totalQuant = 0
+let totalPr = 0
 for (let product of cartridge) {
     i++;
     
@@ -36,8 +38,12 @@ for (let product of cartridge) {
   '</div>';
   let parentSection = document.getElementById("cart__items");
   parentSection.appendChild(newArticle);
-  
-  
-    
+
+  totalQuant += product.quantity
+  totalPr += (product.price*product.quantity)   
 }
+
+document.getElementById("totalQuantity").textContent = totalQuant.toString(10);
+
+document.getElementById("totalPrice").textContent = totalPr.toString(10);
 
