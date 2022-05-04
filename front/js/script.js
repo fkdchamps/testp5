@@ -19,7 +19,7 @@ fetch("http://localhost:3000/api/products")//requete de promesse
 
         /* création de la balise <a> */
         let newAnchor = document.createElement("a");//on crée la balise
-        newAnchor.href = "./product.html?id=" + productId;//on attribue l'url de référence du lien
+        newAnchor.href = "./front/html/product.html?id=" + productId;//on attribue l'url de référence du lien
         newAnchor.id = "anchor" + articleIndex;//on affecte un id# unique à cette balise
 
         /* affectation de la balise <a> dans le html */
