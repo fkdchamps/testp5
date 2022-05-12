@@ -65,7 +65,8 @@ buttonCart.addEventListener('click', function(event) { // On écoute l'événeme
   /* event.stopPropagation(); *///facultatif ici
   /* récup des propriétés */
   let color = document.getElementById("colors").value;
-  let quantity = parseInt(document.getElementById("quantity").value);
+  /* let quantity = parseInt(document.getElementById("quantity").value); */
+  let quantity = document.getElementById("quantity").value;
   //la const id est déjà au début du code
 
   /* création panier-tableau et produit en cours */
