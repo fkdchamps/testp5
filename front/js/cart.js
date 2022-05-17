@@ -144,7 +144,100 @@ function listenSupprArticle(i) {
     dispAllArticles();
   };
 };
+/* ************************************ */
+/* traitement du formulaire de commande */
+/* ************************************ */
+
+
+/* fonction récupération et vérification du formulaire */
+//penser au message d'erreur
+//regex pour vérifier, penser à tester
+//https://www.pierre-giraud.com/javascript-apprendre-coder-cours/introduction-expression-reguliere-rationnelle/
+
+
+/* constituer un objet contact et un tableau produits */
+
+
+/* écoute et envoi de requête post à l'API */
+//https://openclassrooms.com/fr/courses/5543061-ecrivez-du-javascript-pour-le-web partie 2
+
+//requete pos: Verbe, Paramètre, Corps de la demande prévue, Réponse
+//               POST, /order, Requête JSON contenant un objet de contact et un tableau de produits, Retourne l'objet contact, le tableau produits et orderId (string)
+//Pour les routes POST, l’objet contact envoyé au serveur doit contenir les champs firstName, lastName, address, city et email. Le tableau des produits envoyé au back-end doit être un array de strings product-ID. Les types de ces champs et leur présence doivent être validés avant l’envoi des données au serveur.
+const buttonOrder = document.getElementById("order"); //récup de l'élt sur lequel écouter
+
+buttonOrder.addEventListener('click', postOrder);
+
+
+function postOrder(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  let contact = {
+    firstName: document.getElementById("firstName").value,
+    lastName: document.getElementById("lastName").value,
+    address: document.getElementById("address").value,
+    city: document.getElementById("city").value,
+    email: document.getElementById("email").value
+  };
+  
+  let products = [];
+  let productId;
+  for (let item of cartridge) {
+    productId = item.id;
+    
+    products.push(productId);
+    
+  };
+  console.log("products", products);
+  fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    headers: {
+      "Accept": "application/json; charset=UTF-8",
+      "Content-Type": "application/json; charset=UTF-8"
+    },
+      body: JSON.stringify({contact, products})
+  })
+    .then(function(res) {
+      if (res.ok) {
+        
+        return res.json();
+        
+      }
+      
+    })
+      .then(function(value) {
+        console.log(value);
+        const orderId=value.orderId;
+        console.log("voici l'order id", orderId);
+        urlRedirect="./confirmation.html";
+        window.location=urlRedirect + "?id=" + orderId;
+      })
+    .catch(function(err) {//récupération d'erreur si échec de réponse de la promesse (attention pas de then ensuite)
+      console.log(err);
+    });
+};
+
+/**
+ *
+ * Expects request to contain:
+ * contact: {
+ *   firstName: string,
+ *   lastName: string,
+ *   address: string,
+ *   city: string,
+ *   email: string
+ * }
+ * products: [string] <-- array of product _id
+ *voir backend product.js
+ */
 
  
+ /* Effectuer une requête POST sur l’API et récupérer l’identifiant de
+ commande dans la réponse de celle-ci. */
 
-    
+ 
+/*  Rediriger l’utilisateur sur la page Confirmation, en passant l’id de commande dans l’URL, dans le but d’afficher le numéro de
+ commande. */
+
+ /* Si ce numéro doit être affiché, celui-ci ne doit pas être conservé /
+ stocké. */
