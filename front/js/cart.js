@@ -86,9 +86,7 @@ function dispAllArticles() {//parametre cartridge facultatif
         })
         /* mise à jour de l'affichage quantité et prix total */
         .then (function() {
-  
           document.getElementById("totalQuantity").textContent = totalQuant.toString();console.log("qté total affiché");
-
           document.getElementById("totalPrice").textContent = totalPr.toString();
         })
       .catch(function(err) {//récupération d'erreur si échec de réponse de la promesse (attention pas de then ensuite)
@@ -97,24 +95,15 @@ function dispAllArticles() {//parametre cartridge facultatif
   };
 }
 
+dispAllArticles();//actualiser les données affichées
 
-dispAllArticles();//facultatif param
-
-
-/* création de la fonction d'écoute de quantité d'article */
+/* fonction d'écoute de quantité d'article */
 function listenChangeQuant(i) {
   let eltquant = document.querySelector('#a'+ i +' input[name="itemQuantity"]');
-  console.log("tableau recap de liste d'input qté :", eltquant);
-
-  let cartvalue = cartridge; //représentation de cartridge[i] à manipuler.(pas réussi à manipuler directement)
-
-  console.log("boucle modif", i);
+  let cartvalue = cartridge; //représentation de cartridge[i] à manipuler.(problème d'index)
   eltquant.addEventListener("change", changeQuantity);
 
-
-  function changeQuantity(eventq) {
-    /* console.log("incrément", i); */
-    /* console.log("value changée", eventq.target.value); */
+  function changeQuantity(eventq) {//changement de quantité d'un article
     /* eventq.preventDefault();
     eventq.stopPropagation();  */       
     //attention verifier boucle fourchette 0-100?
@@ -124,20 +113,19 @@ function listenChangeQuant(i) {
     cartridge = cartvalue;
     console.log("nouveau panier cartridge", cartridge);
     localStorage.setItem("cartridge", JSON.stringify(cartridge));//envoyer au localstorage
-    
-    dispAllArticles();
+    dispAllArticles();//actualiser l'affichage
   }
 
 }
 
-/* création de la fonction d'écoute de suppression d'article */
+/* fonction d'écoute de suppression d'article */
 function listenSupprArticle(i) {
   let eltSuppr = document.querySelector('#a'+ i +' .cart__item__content__settings__delete .deleteItem');
 
   let cartvalue = cartridge;
   eltSuppr.addEventListener("click", deleteArticle);
 
-  function deleteArticle() {
+  function deleteArticle() {//suppression d'article
     cartvalue.splice(i,1);
     cartridge = cartvalue;
     localStorage.setItem("cartridge", JSON.stringify(cartridge));
@@ -164,80 +152,70 @@ function listenSupprArticle(i) {
 //requete pos: Verbe, Paramètre, Corps de la demande prévue, Réponse
 //               POST, /order, Requête JSON contenant un objet de contact et un tableau de produits, Retourne l'objet contact, le tableau produits et orderId (string)
 //Pour les routes POST, l’objet contact envoyé au serveur doit contenir les champs firstName, lastName, address, city et email. Le tableau des produits envoyé au back-end doit être un array de strings product-ID. Les types de ces champs et leur présence doivent être validés avant l’envoi des données au serveur.
+
+/* paramétrage et écoute du bouton d'envoi */
 const buttonOrder = document.getElementById("order"); //récup de l'élt sur lequel écouter
+buttonOrder.addEventListener('click', postOrder);//écoute
 
-buttonOrder.addEventListener('click', postOrder);
-
-
+/* fonction globale d'envoi de commande */
 function postOrder(event) {
+
   event.preventDefault();
   event.stopPropagation();
-  let contact = {
-    firstName: document.getElementById("firstName").value,
-    lastName: document.getElementById("lastName").value,
-    address: document.getElementById("address").value,
-    city: document.getElementById("city").value,
-    email: document.getElementById("email").value
-  };
-  
+  let contact;
   let products = [];
-  let productId;
-  for (let item of cartridge) {
-    productId = item.id;
+
+  /* collecte des données de la commande */
+  function collectOrder(document) {
+    contact = {
+      firstName: document.getElementById("firstName").value,
+      lastName: document.getElementById("lastName").value,
+      address: document.getElementById("address").value,
+      city: document.getElementById("city").value,
+      email: document.getElementById("email").value
+    };
     
-    products.push(productId);
     
-  };
-  console.log("products", products);
-  fetch("http://localhost:3000/api/products/order", {
-    method: "POST",
-    headers: {
-      "Accept": "application/json; charset=UTF-8",
-      "Content-Type": "application/json; charset=UTF-8"
-    },
-      body: JSON.stringify({contact, products})
-  })
-    .then(function(res) {
-      if (res.ok) {
-        
-        return res.json();
-        
-      }
+    let productId;
+    for (let item of cartridge) {
+      productId = item.id;
       
+      products.push(productId);
+      
+    };
+    console.log("products", products);
+  }
+  collectOrder(document);
+
+  /* envoi de la commande vers l'API */
+  function sendOrder(contact, products) {//
+    fetch("http://localhost:3000/api/products/order", {//requête API d'envoi de commande asynchrone
+      method: "POST",
+      headers: {
+        "Accept": "application/json; charset=UTF-8",
+        "Content-Type": "application/json; charset=UTF-8"
+      },
+        body: JSON.stringify({contact, products})
     })
-      .then(function(value) {
-        console.log(value);
-        const orderId=value.orderId;
-        console.log("voici l'order id", orderId);
-        urlRedirect="./confirmation.html";
-        window.location=urlRedirect + "?id=" + orderId;
+      .then(function(res) {//test de réponse de promise après retour
+        if (res.ok) {
+          return res.json();
+        } 
       })
-    .catch(function(err) {//récupération d'erreur si échec de réponse de la promesse (attention pas de then ensuite)
-      console.log(err);
-    });
+        .then(function redirect(value) {//redirection sur la page de confirmation avec id après retour
+          const orderId=value.orderId;
+          urlRedirect="./confirmation.html";
+          window.location=urlRedirect + "?id=" + orderId;
+        })
+      .catch(function(err) {//récupération d'erreur si échec de réponse de la promesse (attention pas de then ensuite)
+        console.log(err);
+      });
+    }
+    sendOrder(contact, products);
 };
 
-/**
- *
- * Expects request to contain:
- * contact: {
- *   firstName: string,
- *   lastName: string,
- *   address: string,
- *   city: string,
- *   email: string
- * }
- * products: [string] <-- array of product _id
- *voir backend product.js
- */
+
 
  
- /* Effectuer une requête POST sur l’API et récupérer l’identifiant de
- commande dans la réponse de celle-ci. */
 
  
-/*  Rediriger l’utilisateur sur la page Confirmation, en passant l’id de commande dans l’URL, dans le but d’afficher le numéro de
- commande. */
-
- /* Si ce numéro doit être affiché, celui-ci ne doit pas être conservé /
- stocké. */
