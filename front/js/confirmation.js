@@ -1,3 +1,7 @@
+/* ******************** */
+/* page de confirmation */
+/* ******************** */
+
 /* affichage de validation de commande avec numero unique */
 
 const urlObj = new URL(document.location.href);//on transforme la référence d'url en Objet URL exploitable par attributs

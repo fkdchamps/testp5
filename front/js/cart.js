@@ -1,3 +1,7 @@
+/* *********************** */
+/* manipulations du panier */
+/* *********************** */
+
 /* initialisationns */
 
 let cartridge = [];
@@ -132,32 +136,23 @@ function listenSupprArticle(i) {
     dispAllArticles();
   };
 };
+
 /* ************************************ */
 /* traitement du formulaire de commande */
 /* ************************************ */
 
-
-/* fonction récupération et vérification du formulaire */
 //penser au message d'erreur
 //regex pour vérifier, penser à tester
 //https://www.pierre-giraud.com/javascript-apprendre-coder-cours/introduction-expression-reguliere-rationnelle/
 
-
-/* constituer un objet contact et un tableau produits */
-
-
-/* écoute et envoi de requête post à l'API */
-//https://openclassrooms.com/fr/courses/5543061-ecrivez-du-javascript-pour-le-web partie 2
-
-//requete pos: Verbe, Paramètre, Corps de la demande prévue, Réponse
-//               POST, /order, Requête JSON contenant un objet de contact et un tableau de produits, Retourne l'objet contact, le tableau produits et orderId (string)
 //Pour les routes POST, l’objet contact envoyé au serveur doit contenir les champs firstName, lastName, address, city et email. Le tableau des produits envoyé au back-end doit être un array de strings product-ID. Les types de ces champs et leur présence doivent être validés avant l’envoi des données au serveur.
 
-/* paramétrage et écoute du bouton d'envoi */
+/* définition et écoute du bouton d'envoi */
 const buttonOrder = document.getElementById("order"); //récup de l'élt sur lequel écouter
 buttonOrder.addEventListener('click', postOrder);//écoute
 
 /* fonction globale d'envoi de commande */
+/* constituer un objet contact et un tableau produits */
 function postOrder(event) {
 
   event.preventDefault();
@@ -165,7 +160,7 @@ function postOrder(event) {
   let contact;
   let products = [];
 
-  /* collecte des données de la commande */
+  /* collecte des données formulaire de la commande */
   function collectOrder(document) {
     contact = {
       firstName: document.getElementById("firstName").value,
@@ -174,7 +169,6 @@ function postOrder(event) {
       city: document.getElementById("city").value,
       email: document.getElementById("email").value
     };
-    
     
     let productId;
     for (let item of cartridge) {
