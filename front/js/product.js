@@ -1,7 +1,12 @@
+/* ************** */
+/*  page produit  */
+/* ************** */
+
 /* récupération de l'identifiant du produit dans l' url*/
 
 const urlObj = new URL(document.location.href);//on transforme la référence d'url en Objet URL exploitable par attributs
 const id = urlObj.searchParams.get("id");//on isole l'attribut d'identification
+
 function fetchKanap(id){
   let price = 0; //délocalisation
   /* requete du produit */
@@ -9,6 +14,7 @@ function fetchKanap(id){
   let kanapName
   let imgAlt
   //id="?""
+
   fetch("http://localhost:3000/api/products/" + id)
     .then(function(res) {
       if (res.ok) {
@@ -71,18 +77,23 @@ buttonCart.addEventListener('click', function(event) { // On écoute l'événeme
   let color = document.getElementById("colors").value;
   /* let quantity = parseInt(document.getElementById("quantity").value); */
   let quantity = document.getElementById("quantity").value;
-  //la const id est déjà au début du code
+  if (!(quantity >= 1 && quantity <= 100)) {
+    alert("Veuillez entrer ou sélectionner un nombre entre 1 et 100");
+  }else 
+    if (!(color!="")) {
+      alert("Veuillez sélectionner une couleur à l'aide du menu déroulant");
+    }
+    else {
+    /* création panier-tableau et produit en cours */
+    let cartridge = [];
+    let product = {color: color, quantity: quantity, id: id/* , price: price, imgsrc: imgsrc, kanapName: kanapName, imgAlt: imgAlt */};
 
-  /* création panier-tableau et produit en cours */
-  let cartridge = [];
-  let product = {color: color, quantity: quantity, id: id/* , price: price, imgsrc: imgsrc, kanapName: kanapName, imgAlt: imgAlt */};
-
-  /* vérif quantité dans les normes admissibles et implémentation de panier*/
-  if (product.quantity >= 1 && product.quantity <= 100 && product.color != "") {
+    /* vérif quantité dans les normes admissibles et implémentation de panier*/
+    
 
     /* vérif si le panier n'existe pas pour le créer et mettre le premier produit */
     if (!localStorage.getItem("cartridge")) {
-      cartridge = [product];
+      cartridge = cartridge.concat([product]);//!!!passage par valeur et non reference!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       localStorage.setItem("cartridge", JSON.stringify(cartridge));
     /* sinon ajout du produit au panier */
     }else{
@@ -91,11 +102,16 @@ buttonCart.addEventListener('click', function(event) { // On écoute l'événeme
 
       /* test de présence de l'article dans le panier existant par comparaison de propriété produit avec chaque cellule de panier */
       let already = false;//témoin unique de fin de boucle
+      
       for (let i in cartridge) {
+        
         if (product.id === cartridge[i].id && product.color === cartridge[i].color) {//si produit déjà présent
-          cartridge[i].quantity += product.quantity;//pousser seulement sa propriété quantité
+          itsQuantity=parseInt(cartridge[i].quantity, 10);
+
+          itsQuantity += parseInt(product.quantity, 10);//pousser seulement sa propriété quantité
+          cartridge[i].quantity=itsQuantity.toString(10);
           already = true;//témoigner de cette présence
-        }         
+        }       
       }
 
       if (already == false) {//si pas déjà présent, pousser l'objet produit dans panier

@@ -1,19 +1,20 @@
 /* *********************** */
+/*      page panier        */
 /* manipulations du panier */
 /* *********************** */
 
-/* initialisationns */
+/* initialisations */
 
 let cartridge = [];
 let cartridgeString;
 let parentSection;
-let id = "";
+let dataId = "";
 let price; 
 let imgsrc = "";
 let kanapName = "";
 let imgAlt = "";
-
-/* création fonction pour extraire pour chaque cellule l'objet produit en parcourant le tableau et insérer les éléments dans le DOM pour mettre à jour l'affichage*/
+/* let cartvalue = []; */
+/* création fonction pour extraire (pour chaque cellule du tableau panier) l'objet produit en parcourant le tableau et insérer les éléments dans le DOM pour mettre à jour l'affichage*/
 
 function dispAllArticles() {//parametre cartridge facultatif
   cartridgeString = localStorage.getItem("cartridge");
@@ -28,9 +29,9 @@ function dispAllArticles() {//parametre cartridge facultatif
 
   /* pour chaque article de la page */
   for (let i=0; i<cartridge.length; i++) {
-    id = cartridge[i].id;
-    /* requête API afin d'éviter le stockage local du prix */
-    fetch("http://localhost:3000/api/products/" + id)
+    dataId = cartridge[i].id;
+    /* requête API (on a évité le stockage local du prix) */
+    fetch("http://localhost:3000/api/products/" + dataId)
       .then(function(res) {
         if (res.ok) {
           return res.json();
@@ -50,7 +51,7 @@ function dispAllArticles() {//parametre cartridge facultatif
           let newArticle = document.createElement("article");
           newArticle.classList.add("cart__item");
           newArticle.id = 'a' + i;
-          newArticle.dataset.id = cartridge[i].id;
+          newArticle.dataset.id = dataId;
           newArticle.dataset.color = cartridge[i].color;
 
           /* remplissage de l'article */
@@ -85,7 +86,7 @@ function dispAllArticles() {//parametre cartridge facultatif
           /* calcul mis à jour de quantité et prix total */
           totalQuant += parseInt(cartridge[i].quantity, 10);
           //console.log("qté boucle", totalQuant);
-          totalPr += (price*cartridge[i].quantity);
+          totalPr += (price*parseInt(cartridge[i].quantity, 10));
           //console.log(totalPr);
         })
         /* mise à jour de l'affichage quantité et prix total */
@@ -104,20 +105,24 @@ dispAllArticles();//actualiser les données affichées
 /* fonction d'écoute de quantité d'article */
 function listenChangeQuant(i) {
   let eltquant = document.querySelector('#a'+ i +' input[name="itemQuantity"]');
-  let cartvalue = cartridge; //représentation de cartridge[i] à manipuler.(problème d'index)
+  /* cartvalue = cartridge; */ //représentation de cartridge[i] à manipuler.(problème d'index)
   eltquant.addEventListener("change", changeQuantity);
 
   function changeQuantity(eventq) {//changement de quantité d'un article
     /* eventq.preventDefault();
     eventq.stopPropagation();  */       
     //attention verifier boucle fourchette 0-100?
-    cartvalue[i].quantity = eventq.target.value;
-    console.log("value changée", cartvalue[i]);
-    console.log("nouveau panier cartvalue", cartvalue);
-    cartridge = cartvalue;
-    console.log("nouveau panier cartridge", cartridge);
-    localStorage.setItem("cartridge", JSON.stringify(cartridge));//envoyer au localstorage
-    dispAllArticles();//actualiser l'affichage
+    if (eventq.target.value >= 1 && eventq.target.value <= 100) {
+      cartridge[i].quantity = eventq.target.value;
+      console.log("value changée", cartridge[i]);
+      console.log("nouveau panier ", cartridge);
+      /* cartridge = cartvalue; */
+      console.log("nouveau panier cartridge", cartridge);
+      localStorage.setItem("cartridge", JSON.stringify(cartridge));//envoyer au localstorage
+      dispAllArticles();//actualiser l'affichage
+    }else{
+      alert("Veuillez entrer ou sélectionner un nombre entre 1 et 100");
+    }  
   }
 
 }
@@ -126,12 +131,12 @@ function listenChangeQuant(i) {
 function listenSupprArticle(i) {
   let eltSuppr = document.querySelector('#a'+ i +' .cart__item__content__settings__delete .deleteItem');
 
-  let cartvalue = cartridge;
+  /* let cartvalue = cartridge; */
   eltSuppr.addEventListener("click", deleteArticle);
 
   function deleteArticle() {//suppression d'article
-    cartvalue.splice(i,1);
-    cartridge = cartvalue;
+    cartridge.splice(i,1);
+    /* cartridge = cartvalue; */
     localStorage.setItem("cartridge", JSON.stringify(cartridge));
     dispAllArticles();
   };
@@ -152,7 +157,6 @@ const buttonOrder = document.getElementById("order"); //récup de l'élt sur leq
 buttonOrder.addEventListener('click', postOrder);//écoute
 
 /* fonction globale d'envoi de commande */
-/* constituer un objet contact et un tableau produits */
 function postOrder(event) {
 
   event.preventDefault();
@@ -160,7 +164,9 @@ function postOrder(event) {
   let contact;
   let products = [];
 
-  /* collecte des données formulaire de la commande */
+  
+ 
+  /* collecte des données formulaire de la commande, constituer un objet de contact et un tableau de produits sachant que l'API ne gère pas encore les quantités et couleurs des commandes*/
   function collectOrder(document) {
     contact = {
       firstName: document.getElementById("firstName").value,
@@ -189,7 +195,7 @@ function postOrder(event) {
         "Accept": "application/json; charset=UTF-8",
         "Content-Type": "application/json; charset=UTF-8"
       },
-        body: JSON.stringify({contact, products})
+      body: JSON.stringify({contact, products})
     })
       .then(function(res) {//test de réponse de promise après retour
         if (res.ok) {

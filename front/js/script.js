@@ -1,3 +1,7 @@
+/* ************** */
+/* page d'accueil */
+/* ************** */
+
 /* requete produits et récupération au format json*/
 fetch("http://localhost:3000/api/products")//requete de promesse
   .then(function(res) {//.then va enchainer la tache de fonction anonyme au retour la promesse, avec paramètre=reponse(évite de se faire doubler par l'asynchronisme)
