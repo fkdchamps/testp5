@@ -8,7 +8,8 @@
 let cartridge = [];
 let cartridgeString;
 let parentSection;
-let dataId = "";
+let dataIdVar = "";
+let dataIdStor = "";
 let price; 
 let imgsrc = "";
 let kanapName = "";
@@ -19,6 +20,7 @@ let imgAlt = "";
 function dispAllArticles() {//parametre cartridge facultatif
   cartridgeString = localStorage.getItem("cartridge");
   cartridge = JSON.parse(cartridgeString);
+  /* dataIdStor = cartridge[i].id */
   console.log(cartridge);//verif
   totalQuant = 0;
   totalPr = 0;
@@ -29,9 +31,9 @@ function dispAllArticles() {//parametre cartridge facultatif
 
   /* pour chaque article de la page */
   for (let i=0; i<cartridge.length; i++) {
-    dataId = cartridge[i].id;
+    dataIdStor=cartridge[i].id
     /* requête API (on a évité le stockage local du prix) */
-    fetch("http://localhost:3000/api/products/" + dataId)
+    fetch("http://localhost:3000/api/products/" + dataIdStor)
       .then(function(res) {
         if (res.ok) {
           return res.json();
@@ -46,12 +48,12 @@ function dispAllArticles() {//parametre cartridge facultatif
           imgsrc = value.imageUrl; console.log("imgsrc", imgsrc);
           kanapName = value.name;
           imgAlt = value.altTxt + ", " + kanapName;
-
+          dataIdStor = value._id;
           /* création d'un nouvel article pour le produit */
           let newArticle = document.createElement("article");
           newArticle.classList.add("cart__item");
           newArticle.id = 'a' + i;
-          newArticle.dataset.id = dataId;
+          newArticle.dataset.id = dataIdStor;
           newArticle.dataset.color = cartridge[i].color;
 
           /* remplissage de l'article */
@@ -84,13 +86,14 @@ function dispAllArticles() {//parametre cartridge facultatif
           listenChangeQuant(i);//!!! on écoute de préférence dès la création de l'élément
           listenSupprArticle(i);
           /* calcul mis à jour de quantité et prix total */
+          
+        })
+        /* mise à jour de l'affichage quantité et prix total */
+        .then (function() {
           totalQuant += parseInt(cartridge[i].quantity, 10);
           //console.log("qté boucle", totalQuant);
           totalPr += (price*parseInt(cartridge[i].quantity, 10));
           //console.log(totalPr);
-        })
-        /* mise à jour de l'affichage quantité et prix total */
-        .then (function() {
           document.getElementById("totalQuantity").textContent = totalQuant.toString();console.log("qté total affiché");
           document.getElementById("totalPrice").textContent = totalPr.toString();
         })
@@ -119,7 +122,8 @@ function listenChangeQuant(i) {
       /* cartridge = cartvalue; */
       console.log("nouveau panier cartridge", cartridge);
       localStorage.setItem("cartridge", JSON.stringify(cartridge));//envoyer au localstorage
-      dispAllArticles();//actualiser l'affichage
+      dispAllArticles();
+     
     }else{
       alert("Veuillez entrer ou sélectionner un nombre entre 1 et 100");
     }  
@@ -152,6 +156,7 @@ function listenSupprArticle(i) {
 
 //Pour les routes POST, l’objet contact envoyé au serveur doit contenir les champs firstName, lastName, address, city et email. Le tableau des produits envoyé au back-end doit être un array de strings product-ID. Les types de ces champs et leur présence doivent être validés avant l’envoi des données au serveur.
 
+
 /* définition et écoute du bouton d'envoi */
 const buttonOrder = document.getElementById("order"); //récup de l'élt sur lequel écouter
 buttonOrder.addEventListener('click', postOrder);//écoute
@@ -163,7 +168,40 @@ function postOrder(event) {
   event.stopPropagation();
   let contact;
   let products = [];
+  /* test validité des données de formulaire*/
 
+  varFirstName = document.getElementById("firstName");
+  let regXvarFirstName = new RegExp(/^[a-zA-zÀ-ú]+$/);
+  varLastName = document.getElementById("lastName");
+  let regXvarLastName = new RegExp(/^[a-zA-zÀ-ú-]+$/);
+  varAddress = document.getElementById("address");
+  let regXvarAddress = new RegExp(/^[0-9a-zA-ZÀ-ú\s,-]+$/);
+  varCity = document.getElementById("city");
+  let regXvarCity = new RegExp(/^[a-zA-z-]+$/);
+  varEmail = document.getElementById("email");
+  let regXvarEmail = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+
+
+  if (regXvarFirstName.test(varFirstName.value)===false) {
+      document.getElementById("firstName"+"ErrorMsg").innerText="Saisissez un "+document.querySelector("label[for='firstName']").innerText+ " valide";
+      console.log("firstName pas bon");
+  }
+  else if (regXvarLastName.test(varLastName.value)===false) {
+      document.getElementById("lastName"+"ErrorMsg").innerText="Saisissez un "+document.querySelector("label[for='lastName']").innerText+ " valide";
+      console.log("lastName pas bon");
+  }
+  else if (regXvarAddress.test(varAddress.value)===false) {
+      document.getElementById("address"+"ErrorMsg").innerText="Saisissez une "+document.querySelector("label[for='address']").innerText+ " valide";
+      console.log("address pas bon");
+  }
+  else if (regXvarCity.test(varCity.value)===false) {
+      document.getElementById("city"+"ErrorMsg").innerText="Saisissez un "+document.querySelector("label[for='city']").innerText+ " valide";
+      console.log("firstName pas bon");
+  }
+  else if (regXvarEmail.test(varEmail.value)===false) {
+      document.getElementById("email"+"ErrorMsg").innerText="Saisissez un "+document.querySelector("label[for='email']").innerText+ " valide";
+      console.log("email pas bon");
+  }else{
   
  
   /* collecte des données formulaire de la commande, constituer un objet de contact et un tableau de produits sachant que l'API ne gère pas encore les quantités et couleurs des commandes*/
@@ -203,9 +241,8 @@ function postOrder(event) {
         } 
       })
         .then(function redirect(value) {//redirection sur la page de confirmation avec id après retour
-          const orderId=value.orderId;
           urlRedirect="./confirmation.html";
-          window.location=urlRedirect + "?id=" + orderId;
+          window.location=urlRedirect + "?id=" + value.orderId;
         })
       .catch(function(err) {//récupération d'erreur si échec de réponse de la promesse (attention pas de then ensuite)
         console.log(err);
@@ -213,7 +250,7 @@ function postOrder(event) {
     }
     sendOrder(contact, products);
 };
-
+}
 
 
  

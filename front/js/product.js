@@ -6,13 +6,14 @@
 
 const urlObj = new URL(document.location.href);//on transforme la référence d'url en Objet URL exploitable par attributs
 const id = urlObj.searchParams.get("id");//on isole l'attribut d'identification
-
+let imgsrc
+let kanapName
+let imgAlt
+let price = 0; //délocalisations variables
 function fetchKanap(id){
-  let price = 0; //délocalisation
+  
   /* requete du produit */
-  let imgsrc
-  let kanapName
-  let imgAlt
+  
   //id="?""
 
   fetch("http://localhost:3000/api/products/" + id)
@@ -120,6 +121,7 @@ buttonCart.addEventListener('click', function(event) { // On écoute l'événeme
 
       /* affectation panier dans localstorage */
       localStorage.setItem("cartridge", JSON.stringify(cartridge));
+      alert("Félicitations,vous venez d'ajouter "+product.quantity+" canapé(s) "+kanapName+" de couleur "+product.color+" à votre panier.")
     }
   }
 })

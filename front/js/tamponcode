@@ -1,0 +1,23 @@
+/* test validité des données de formulaire*/
+
+varFirstName = document.getElementById("firstName");
+let regXvarFirstName = new RegExp(/^[a-zA-z]+$/);
+varLastName = document.getElementById("lastName");
+let regXvarLastName = new RegExp(/^[a-zA-z]+$/);
+varAddress = document.getElementById("address");
+let regXvarAddress = new RegExp(/^[0-9a-zA-Z\s,-]+$/);
+varCity = document.getElementById("city");
+let regXvarCity = new RegExp(/^[a-zA-z-]+$/);
+varEmail = document.getElementById("email");
+let regXvarEmail = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+
+
+if (regXvarFirstName.test(varFirstName.value)===false) {
+    document.getElementById("firstName"+"ErrorMsg").innerText="Saisissez un "+document.querySelector("label[for='firstName']").innerText+ " valide";
+    console.log("firstName pas bon");
+  }
+
+
+
+
+    
