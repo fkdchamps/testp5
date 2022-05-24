@@ -244,11 +244,16 @@ function postOrder(event) {
           urlRedirect="./confirmation.html";
           window.location=urlRedirect + "?id=" + value.orderId;
         })
+          .then(function removecartridge() {
+            cartridge=[];
+            localStorage.removeItem("cartridge");
+          })
       .catch(function(err) {//récupération d'erreur si échec de réponse de la promesse (attention pas de then ensuite)
         console.log(err);
       });
-    }
-    sendOrder(contact, products);
+  }
+
+  sendOrder(contact, products);
 };
 }
 

@@ -9,7 +9,8 @@ const id = urlObj.searchParams.get("id");//on isole l'attribut d'identification
 let imgsrc
 let kanapName
 let imgAlt
-let price = 0; //délocalisations variables
+/* let price = 0; */
+//délocalisations variables
 function fetchKanap(id){
   
   /* requete du produit */
@@ -23,41 +24,7 @@ function fetchKanap(id){
       }
     })
       /* mise à disposition des détails du produit */
-      .then(function(value) {
-        /* affectations attributs*/
-        let productId = value._id;
-        price = value.price;
-        imgsrc = value.imageUrl;
-        kanapName = value.name;
-        imgAlt = value.altTxt + ", " + kanapName;
-        let descript = value.description;
-
-        /* implementer l'image du produit */
-        const eltDivImg = document.querySelector("section.item .item__img");
-        eltDivImg.innerHTML = "<img src=" + imgsrc + " alt=" + imgAlt + "></img>";
-
-        /* implementer le titre */
-        const eltTitle = document.getElementById("title");
-        eltTitle.innerHTML = kanapName;
-
-        /* implementer le prix */
-        const eltPrice = document.getElementById("price");
-        eltPrice.innerHTML = price;
-
-        /* description */
-        const eltDescription = document.getElementById("description");
-        eltDescription.innerHTML = descript;
-
-        /* couleurs */
-        const colors = value.colors;
-        const options = document.getElementById("colors");
-        for (let color of colors) {
-          let option = document.createElement("option");
-          option.value = color;
-          option.label = color;
-          options.appendChild(option);
-        }
-      })
+      .then(displayProduct)
       
     .catch(function(err) {//récupération d'erreur si échec de réponse de la promesse
       console.log(err);
@@ -126,4 +93,38 @@ buttonCart.addEventListener('click', function(event) { // On écoute l'événeme
   }
 })
 
+function displayProduct(value) {
+  /* affectations attributs*/
+  let productId = value._id;
+  /* price = value.price; */
+  imgsrc = value.imageUrl;
+  kanapName = value.name;
+  imgAlt = value.altTxt + ", " + kanapName;
+  let descript = value.description;
 
+  /* implementer l'image du produit */
+  const eltDivImg = document.querySelector("section.item .item__img");
+  eltDivImg.innerHTML = "<img src=" + imgsrc + " alt=" + imgAlt + "></img>";
+
+  /* implementer le titre */
+  const eltTitle = document.getElementById("title");
+  eltTitle.innerHTML = kanapName;
+
+  /* implementer le prix */
+  const eltPrice = document.getElementById("price");
+  eltPrice.innerHTML = value.price;
+
+  /* description */
+  const eltDescription = document.getElementById("description");
+  eltDescription.innerHTML = descript;
+
+  /* couleurs */
+  const colors = value.colors;
+  const options = document.getElementById("colors");
+  for (let color of colors) {
+    let option = document.createElement("option");
+    option.value = color;
+    option.label = color;
+    options.appendChild(option);
+  }
+}
