@@ -39,68 +39,68 @@ function dispAllArticles() {//parametre cartridge facultatif
           return res.json();
         }
       })
-        /* mise à disposition des détails du produit */
-        .then(function(value) {
+      /* mise à disposition des détails du produit */
+      .then(function(value) {
 
-          /* affectations attributs*/
-          console.log("value du fetch:", value);
-          price = value.price;
-          imgsrc = value.imageUrl; console.log("imgsrc", imgsrc);
-          kanapName = value.name;
-          imgAlt = value.altTxt + ", " + kanapName;
-          dataIdStor = value._id;
-          /* création d'un nouvel article pour le produit */
-          let newArticle = document.createElement("article");
-          newArticle.classList.add("cart__item");
-          newArticle.id = 'a' + i;
-          newArticle.dataset.id = dataIdStor;
-          newArticle.dataset.color = cartridge[i].color;
+        /* affectations attributs*/
+        console.log("value du fetch:", value);
+        price = value.price;
+        imgsrc = value.imageUrl; console.log("imgsrc", imgsrc);
+        kanapName = value.name;
+        imgAlt = value.altTxt + ", " + kanapName;
+        dataIdStor = value._id;
+        /* création d'un nouvel article pour le produit */
+        let newArticle = document.createElement("article");
+        newArticle.classList.add("cart__item");
+        newArticle.id = 'a' + i;
+        newArticle.dataset.id = dataIdStor;
+        newArticle.dataset.color = cartridge[i].color;
 
-          /* remplissage de l'article */
-          newArticle.innerHTML = '<div class="cart__item__img">'+
-            '<img src = ' + imgsrc +'>'+
+        /* remplissage de l'article */
+        newArticle.innerHTML = '<div class="cart__item__img">'+
+          '<img src = ' + imgsrc +'>'+
+        '</div>'+
+        '<div class="cart__item__content">'+
+          '<div class="cart__item__content__description">'+
+            '<h2>' + kanapName + '</h2>'+
+            '<p>' + cartridge[i].color + '</p>'+
+            '<p>' + price + '€</p>'+
           '</div>'+
-          '<div class="cart__item__content">'+
-            '<div class="cart__item__content__description">'+
-              '<h2>' + kanapName + '</h2>'+
-              '<p>' + cartridge[i].color + '</p>'+
-              '<p>' + price + '€</p>'+
+          '<div class="cart__item__content__settings">'+
+            '<div class="cart__item__content__settings__quantity">'+
+              '<p>Qté : </p>'+
+              '<input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="' + cartridge[i].quantity +'">'+
             '</div>'+
-            '<div class="cart__item__content__settings">'+
-              '<div class="cart__item__content__settings__quantity">'+
-                '<p>Qté : </p>'+
-                '<input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="' + cartridge[i].quantity +'">'+
-              '</div>'+
-              '<div class="cart__item__content__settings__delete">'+
-                '<p class="deleteItem">Supprimer</p>'+
-              '</div>'+
+            '<div class="cart__item__content__settings__delete">'+
+              '<p class="deleteItem">Supprimer</p>'+
             '</div>'+
-          '</div>';
+          '</div>'+
+        '</div>';
 
-          //console.log(cartridge[i].id, cartridge[i].color, " est affiché");
+        //console.log(cartridge[i].id, cartridge[i].color, " est affiché");
 
-          /* affichage de l'article */
-          parentSection.appendChild(newArticle);
-          
-          /* écoute de l'input correspondant */
-          listenChangeQuant(i);//!!! on écoute de préférence dès la création de l'élément
-          listenSupprArticle(i);
-          /* calcul mis à jour de quantité et prix total */
-          
-        })
-        /* mise à jour de l'affichage quantité et prix total */
-        .then (function() {
-          totalQuant += parseInt(cartridge[i].quantity, 10);
-          //console.log("qté boucle", totalQuant);
-          totalPr += (price*parseInt(cartridge[i].quantity, 10));
-          //console.log(totalPr);
-          document.getElementById("totalQuantity").textContent = totalQuant.toString();console.log("qté total affiché");
-          document.getElementById("totalPrice").textContent = totalPr.toString();
-        })
+        /* affichage de l'article */
+        parentSection.appendChild(newArticle);
+        
+        /* écoute de l'input correspondant */
+        listenChangeQuant(i);//!!! on écoute de préférence dès la création de l'élément
+        listenSupprArticle(i);
+        /* calcul mis à jour de quantité et prix total */
+        
+      })
+      /* mise à jour de l'affichage quantité et prix total */
+      .then (function() {
+        totalQuant += parseInt(cartridge[i].quantity, 10);
+        //console.log("qté boucle", totalQuant);
+        totalPr += (price*parseInt(cartridge[i].quantity, 10));
+        //console.log(totalPr);
+        document.getElementById("totalQuantity").textContent = totalQuant.toString();console.log("qté total affiché");
+        document.getElementById("totalPrice").textContent = totalPr.toString();
+      })
       .catch(function(err) {//récupération d'erreur si échec de réponse de la promesse (attention pas de then ensuite)
         console.log(err);
-      });
-  };
+      })
+  }
 }
 
 dispAllArticles();//actualiser les données affichées
@@ -123,12 +123,10 @@ function listenChangeQuant(i) {
       console.log("nouveau panier cartridge", cartridge);
       localStorage.setItem("cartridge", JSON.stringify(cartridge));//envoyer au localstorage
       dispAllArticles();
-     
     }else{
       alert("Veuillez entrer ou sélectionner un nombre entre 1 et 100");
     }  
   }
-
 }
 
 /* fonction d'écoute de suppression d'article */
@@ -144,17 +142,12 @@ function listenSupprArticle(i) {
     localStorage.setItem("cartridge", JSON.stringify(cartridge));
     dispAllArticles();
   };
-};
+}
 
 /* ************************************ */
 /* traitement du formulaire de commande */
 /* ************************************ */
 
-//penser au message d'erreur
-//regex pour vérifier, penser à tester
-//https://www.pierre-giraud.com/javascript-apprendre-coder-cours/introduction-expression-reguliere-rationnelle/
-
-//Pour les routes POST, l’objet contact envoyé au serveur doit contenir les champs firstName, lastName, address, city et email. Le tableau des produits envoyé au back-end doit être un array de strings product-ID. Les types de ces champs et leur présence doivent être validés avant l’envoi des données au serveur.
 
 
 /* définition et écoute du bouton d'envoi */
@@ -162,14 +155,15 @@ const buttonOrder = document.getElementById("order"); //récup de l'élt sur leq
 buttonOrder.addEventListener('click', postOrder);//écoute
 
 /* fonction globale d'envoi de commande */
-function postOrder(event) {
+function postOrder(event){
 
   event.preventDefault();
   event.stopPropagation();
   let contact;
   let products = [];
-  /* test validité des données de formulaire*/
 
+  /* test validité des données de formulaire*/
+   
   varFirstName = document.getElementById("firstName");
   let regXvarFirstName = new RegExp(/^[a-zA-zÀ-ú]+$/);
   varLastName = document.getElementById("lastName");
@@ -180,30 +174,68 @@ function postOrder(event) {
   let regXvarCity = new RegExp(/^[a-zA-z-]+$/);
   varEmail = document.getElementById("email");
   let regXvarEmail = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
-
-
+  let errorExist=false
   if (regXvarFirstName.test(varFirstName.value)===false) {
       document.getElementById("firstName"+"ErrorMsg").innerText="Saisissez un "+document.querySelector("label[for='firstName']").innerText+ " valide";
       console.log("firstName pas bon");
+      errorExist=true;
   }
-  else if (regXvarLastName.test(varLastName.value)===false) {
+  else if (regXvarFirstName.test(varFirstName.value)===true) {
+    document.getElementById("firstName"+"ErrorMsg").innerText="";
+    console.log("firstName ok");
+  };
+
+  if (regXvarLastName.test(varLastName.value)===false) {
       document.getElementById("lastName"+"ErrorMsg").innerText="Saisissez un "+document.querySelector("label[for='lastName']").innerText+ " valide";
       console.log("lastName pas bon");
+      errorExist=true;
   }
-  else if (regXvarAddress.test(varAddress.value)===false) {
+  else if (regXvarLastName.test(varLastName.value)===true) {
+    document.getElementById("lastName"+"ErrorMsg").innerText="";
+    console.log("lastName ok");
+  };
+
+  if (regXvarAddress.test(varAddress.value)===false) {
       document.getElementById("address"+"ErrorMsg").innerText="Saisissez une "+document.querySelector("label[for='address']").innerText+ " valide";
       console.log("address pas bon");
+      errorExist=true;
   }
-  else if (regXvarCity.test(varCity.value)===false) {
+  else if (regXvarAddress.test(varAddress.value)===true) {
+    document.getElementById("address"+"ErrorMsg").innerText="";
+    console.log("address ok");
+  };
+
+  if (regXvarCity.test(varCity.value)===false) {
       document.getElementById("city"+"ErrorMsg").innerText="Saisissez un "+document.querySelector("label[for='city']").innerText+ " valide";
-      console.log("firstName pas bon");
+      console.log("city pas bon");
+      errorExist=true;
   }
-  else if (regXvarEmail.test(varEmail.value)===false) {
+  else if (regXvarCity.test(varCity.value)===true) {
+    document.getElementById("city"+"ErrorMsg").innerText="";
+    console.log("address ok");
+  };
+  
+  if (regXvarEmail.test(varEmail.value)===false) {
       document.getElementById("email"+"ErrorMsg").innerText="Saisissez un "+document.querySelector("label[for='email']").innerText+ " valide";
       console.log("email pas bon");
+      errorExist=true;
+  }
+  else if (regXvarEmail.test(varEmail.value)===true) {
+    document.getElementById("email"+"ErrorMsg").innerText="";
+    console.log("email ok");
+  };
+
+  console.log("erreur après test", errorExist);
+  if (errorExist===true) {
+    console.log("j'écoute à nouveau");
+    buttonOrder.addEventListener('click', postOrder);//écoute
   }else{
+    console.log("je collecte et j'envoie");
+    collectOrder(document);
+    sendOrder(contact, products);
+  }
   
- 
+    
   /* collecte des données formulaire de la commande, constituer un objet de contact et un tableau de produits sachant que l'API ne gère pas encore les quantités et couleurs des commandes*/
   function collectOrder(document) {
     contact = {
@@ -217,47 +249,42 @@ function postOrder(event) {
     let productId;
     for (let item of cartridge) {
       productId = item.id;
-      
       products.push(productId);
-      
     };
     console.log("products", products);
   }
-  collectOrder(document);
+  
 
   /* envoi de la commande vers l'API */
-  function sendOrder(contact, products) {//
-    fetch("http://localhost:3000/api/products/order", {//requête API d'envoi de commande asynchrone
-      method: "POST",
-      headers: {
-        "Accept": "application/json; charset=UTF-8",
-        "Content-Type": "application/json; charset=UTF-8"
-      },
-      body: JSON.stringify({contact, products})
-    })
+  function sendOrder(contact, products){
+    let conf=confirm("Félicitations!\nVous allez commander "+totalQuant+" canapé(s) pour la somme de "+totalPr+"€\nVeuillez confirmer");
+    if (conf){
+      fetch("http://localhost:3000/api/products/order", {//requête API d'envoi de commande asynchrone
+        method: "POST",
+        headers: {
+          "Accept": "application/json; charset=UTF-8",
+          "Content-Type": "application/json; charset=UTF-8"
+        },
+        body: JSON.stringify({contact, products})
+      })
       .then(function(res) {//test de réponse de promise après retour
         if (res.ok) {
           return res.json();
         } 
       })
-        .then(function redirect(value) {//redirection sur la page de confirmation avec id après retour
-          urlRedirect="./confirmation.html";
-          window.location=urlRedirect + "?id=" + value.orderId;
-        })
-          .then(function removecartridge() {
-            cartridge=[];
-            localStorage.removeItem("cartridge");
-          })
+      .then(function redirect(value) {//redirection sur la page de confirmation avec id après retour
+        urlRedirect="./confirmation.html";
+        window.location=urlRedirect + "?id=" + value.orderId;
+      })
+      .then(function removecartridge() {
+        cartridge=[];
+        localStorage.removeItem("cartridge");
+      })
       .catch(function(err) {//récupération d'erreur si échec de réponse de la promesse (attention pas de then ensuite)
         console.log(err);
       });
+    }else{}
   }
-
-  sendOrder(contact, products);
-};
+  
 }
 
-
- 
-
- 
