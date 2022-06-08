@@ -91,16 +91,13 @@ function DisplayContent(){
 
 function addProduct(color, quantity, id) {
   product = {color: color, quantity: quantity, id: id};
-  console.log("product après testinput et setproduct", product);
   /* vérif si le panier n'existe pas pour le créer et mettre le premier produit */
   if (!localStorage.getItem("cartridge")) {
     let cartridge = [product];//création d'un nouveau tableau constitué du contenu de product
-    console.log("creation de nouveau panier", cartridge);
     localStorage.setItem("cartridge", JSON.stringify(cartridge))
   }else{
     let cartridgeString = localStorage.getItem("cartridge");//le panier du localstorage est importé sous forme de chaine
     let cartridge = JSON.parse(cartridgeString);//puis transposé en objet json
-    console.log("voici le panier existant depuis ls", cartridge);
 
     /* test de présence de l'article dans le panier existant par comparaison de propriété produit avec chaque cellule de panier */
     let already = false;//initialisation témoin de présence de produit de fin de boucle for

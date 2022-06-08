@@ -14,7 +14,6 @@ function createBlockLinkArticle(newAnchor, productId, i) {
     /* affectation de la balise <a> dans le html */
     const parentSection = document.getElementById("items");//on va chercher le bloc parent de ce nouveau <a>
     parentSection.appendChild(newAnchor);//on injecte la balise html de lien
-    console.log("newAnchor juste créé", newAnchor);
 };
 
 /* fonction d'insertion de l'article dans la balise <a> */
@@ -34,7 +33,6 @@ function createArticle(product, i) {
     let imgsrc = product.imageUrl;
     let kanapName = product.name;
     let imgAlt = product.altTxt;
-    console.log(product.altTxt);
     let descript = product.description;
     
     /* création de la balise <a> lien englobant l'article */
@@ -48,7 +46,6 @@ function createArticle(product, i) {
 
 /* fonction d'exploitation et affichage des données */
 function displayAll(ArrayProduitsJson) {//affichage de tout le stock d'articles issu de la REPONSE
-    console.log("tableau de l'api", ArrayProduitsJson);
     for (let i=0; i<ArrayProduitsJson.length; i++) {
         let product=ArrayProduitsJson[i];
         createArticle(product,i); 
