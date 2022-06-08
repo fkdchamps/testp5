@@ -72,13 +72,12 @@ function errorReturn(err) {//récupération d'erreur si échec de réponse de la
     /* ********************************** */
 
 function DisplayContent(){
-  getId();//récup id
+  getId();//récup id ou
   fetch("http://localhost:3000/api/products/" + id)//requête produit
     .then(getResData)//récup response
     .then(displayProduct)//affichage
     .catch(errorReturn)//retour erreur
 }
-DisplayContent();
 
   /******************************************* */
   /* 2) écoute et envoi de l'article au panier */
@@ -150,13 +149,12 @@ function SendOnClick() { /* envoi au panier */
   testInputs(color, quantity);
 }
 
-    /* ******************** */
-    /* 2.3)écoute du bouton */
-    /* ******************** */
+/* ********************** */
+/* CODE GLOBAL DE LA PAGE */
+/*   AFFICHAGE ET ECOUTE  */
+/* ********************** */
 
+DisplayContent();//affichage global du produit
 const buttonCart = document.getElementById("addToCart"); //récup de l'élt sur lequel écouter
-
 buttonCart.addEventListener('click', SendOnClick);// On écoute l'événement click, et on lui attribue une fonction d'envoi
 
-
-  

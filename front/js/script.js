@@ -47,7 +47,7 @@ function createArticle(product, i) {
 };
 
 /* fonction d'exploitation et affichage des données */
-function displayAll(ArrayProduitsJson) {//affichage de tout le stock d'articles issu de la reponse
+function displayAll(ArrayProduitsJson) {//affichage de tout le stock d'articles issu de la REPONSE
     console.log("tableau de l'api", ArrayProduitsJson);
     for (let i=0; i<ArrayProduitsJson.length; i++) {
         let product=ArrayProduitsJson[i];
@@ -70,7 +70,7 @@ function errorReturn(err) {//récupération d'erreur si échec de réponse de la
 }
 
     /* **************************** */
-    /* 2) code principal de la page */
+    /* 2) CODE PRINCIPAL DE LA PAGE */
     /* **************************** */
 
 /* Fonction globale de la page: on va requêter les données sur l'API, puis on extrait la réponse de promise au format JSON, puis on exploite toutes les données reçues pour l'affichage du stock d'articles, et enfin un retour d'erreur */
