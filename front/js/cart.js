@@ -91,11 +91,12 @@ function displayProduct(value, cartridge, i) {
 function listenChangeQuant(i, cartridge) {
     eltquant = document.querySelector('#a'+ i +' input[name="itemQuantity"]');//récupération de l'élément à écouter
     eltquant.addEventListener("change", changeQuantity);//écoute sur l'élément, avec fonction à exécuter au changement
+    
     console.log("ecoute quantité");
     /* fonction de changement de quantité d'un article */
     function changeQuantity(eventQuant) {
-      /* eventQuant.preventDefault();
-      eventQuant.stopPropagation();  */       
+      eventQuant.preventDefault();
+      eventQuant.stopPropagation();        
       
       if (eventQuant.target.value >= 1 && eventQuant.target.value <= 100) {//verifier quantité fourchette 0-100 pour la cible de l'écoute(never trust user)
         cartridge[i].quantity = eventQuant.target.value;//alors la quantité produit dans la cellule panier change
@@ -121,6 +122,8 @@ function listenSupprArticle(i) {
     console.log("ecoute suppression");
     /* suppression d'article */
     function deleteArticle(eventSuppr) {//suppression d'article
+        eventSuppr.preventDefault();
+        eventSuppr.stopPropagation();
         cartridge.splice(i,1);
         /* cartridge = cartvalue; */
         localStorage.setItem("cartridge", JSON.stringify(cartridge));
@@ -286,7 +289,7 @@ function sendPostOrder(){
     console.log(conf);
     
     if (conf===false){
-        return//sortie si refus utilisateur
+     /*  mainPage()//écoute si annulation */
     }else if (conf===true){
         
         fetch("http://localhost:3000/api/products/order", {//requête API d'envoi de commande asynchrone
@@ -339,7 +342,10 @@ function listenOrderButton() {
 /* CODE GLOBAL PRINCIPAL DE PAGE */
 /* ***************************** */
 
+function mainPage(){
+  globalDisplay();
+  listenOrderButton()
+}
 
-globalDisplay();
-listenOrderButton()
+mainPage()
 
