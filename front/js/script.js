@@ -56,7 +56,7 @@ function displayAll(ArrayProduitsJson) {//affichage de tout le stock d'articles 
 function getResData(res) {
     if (res.ok) {//vérifie true si succès de réponse
         /* console.log("retour", res.json()) */
-        return res.json();//retourne la méthode json de cette réponse
+        return res.json();//retourne la méthode json de cette réponse (ultérieur ArrayProduitsJson)
     }
 }  
 

@@ -20,7 +20,7 @@ let imgAlt = "";
 let totalQuant;
 let totalPr;
 let ArrayData=[];
-let eltquant;
+
 let contact;
 let products = [];
 
@@ -49,7 +49,7 @@ function displayQuantPrice(cartridge, i) {
 
 /* fonction d'affichage complet d'UN produit grâce aux données de la requête et grâce au panier */
 function displayProduct(value, cartridge, i) {
-    let apiProduct=value;
+    const apiProduct=value;
     ArrayData.push(apiProduct);//constituer un tableau des produits de requête par ajout du produit 
     
     /* affectations attributs du produit en vue de l'affichage*/
@@ -60,7 +60,7 @@ function displayProduct(value, cartridge, i) {
     dataIdStor = apiProduct._id;
 
     /* création d'un nouvel élément article HTML pour ce produit */
-    let newArticle = document.createElement("article");
+    const newArticle = document.createElement("article");
     newArticle.classList.add("cart__item");
     newArticle.id = 'a' + i;
     newArticle.dataset.id = dataIdStor;
@@ -69,7 +69,6 @@ function displayProduct(value, cartridge, i) {
     /* remplissage de l'article sur la page*/
     newArticle.innerHTML = '<div class="cart__item__img">'+
     '<img src = ' + imgsrc + '>'+'</div>'+'<div class="cart__item__content">'+'<div class="cart__item__content__description">'+'<h2>' + kanapName + '</h2>'+'<p>' + cartridge[i].color + '</p>'+'<p>' + price + '€</p>'+'</div>'+'<div class="cart__item__content__settings">'+'<div class="cart__item__content__settings__quantity">'+'<p>Qté : </p>'+'<input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="' + cartridge[i].quantity + '">'+'</div>'+'<div class="cart__item__content__settings__delete">'+'<p class="deleteItem">Supprimer</p>'+'</div>'+'</div>'+'</div>';
-    console.log(cartridge[i].id, cartridge[i].color, " est affiché");
 
     /* insertion de l'article dans le document*/
     parentSection.appendChild(newArticle);
@@ -77,7 +76,7 @@ function displayProduct(value, cartridge, i) {
 
 /* fonction d'écoute de quantité d'article */
 function listenChangeQuant(i, cartridge) {
-    eltquant = document.querySelector('#a'+ i +' input[name="itemQuantity"]');//récupération de l'élément à écouter
+    const eltquant = document.querySelector('#a'+ i +' input[name="itemQuantity"]');//récupération de l'élément à écouter
     eltquant.addEventListener("change", changeQuantity);//écoute sur l'élément, avec fonction à exécuter au changement
     
     /* fonction de changement de quantité d'un article */
@@ -98,7 +97,7 @@ function listenChangeQuant(i, cartridge) {
 /* fonction d'écoute de suppression d'article */
 /* modèle idem à logique d'écoute de quantité */
 function listenSupprArticle(i) {
-    let eltSuppr = document.querySelector('#a'+ i +' .cart__item__content__settings__delete .deleteItem');
+    const eltSuppr = document.querySelector('#a'+ i +' .cart__item__content__settings__delete .deleteItem');
     eltSuppr.addEventListener("click", deleteArticle);
     /* suppression d'article */
     function deleteArticle(eventSuppr) {//suppression d'article
@@ -157,16 +156,16 @@ function globalDisplay() {
 /* test validité des données de formulaire avant collecte et envoi*/
 function validForm() {
     /* tests données de formulaire avec expressions régulières  */    
-    varFirstName = document.getElementById("firstName");
-    let regXvarFirstName = new RegExp(/^[a-zA-zÀ-ú]+$/);
-    varLastName = document.getElementById("lastName");
-    let regXvarLastName = new RegExp(/^[a-zA-zÀ-ú-]+$/);
-    varAddress = document.getElementById("address");
-    let regXvarAddress = new RegExp(/^[0-9a-zA-ZÀ-ú\s,-]+$/);
-    varCity = document.getElementById("city");
-    let regXvarCity = new RegExp(/^[a-zA-z-]+$/);
-    varEmail = document.getElementById("email");
-    let regXvarEmail = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+    let varFirstName = document.getElementById("firstName");
+    const regXvarFirstName = new RegExp(/^[a-zA-zÀ-ú]+$/);
+    let varLastName = document.getElementById("lastName");
+    const regXvarLastName = new RegExp(/^[a-zA-zÀ-ú-]+$/);
+    let varAddress = document.getElementById("address");
+    const regXvarAddress = new RegExp(/^[0-9a-zA-ZÀ-ú\s,-]+$/);
+    let varCity = document.getElementById("city");
+    const regXvarCity = new RegExp(/^[a-zA-z-]+$/);
+    let varEmail = document.getElementById("email");
+    const regXvarEmail = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
     let errorExist=false//initialisation témoin d'erreur
     if (regXvarFirstName.test(varFirstName.value)===false) {
         document.getElementById("firstName"+"ErrorMsg").innerText="Saisissez un "+document.querySelector("label[for='firstName']").innerText+ " valide";
