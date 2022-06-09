@@ -25,7 +25,6 @@ function getId(){
 /* fonction de récupération de promise */
 function getResData(res) {
   if (res.ok) {//vérifie true si succès de réponse
-      /* console.log("retour", res.json()) */
       return res.json();//retourne la méthode json de cette réponse
   }
 } 
@@ -79,6 +78,7 @@ function DisplayContent(){
     .catch(errorReturn)//retour erreur
 }
 
+
   /******************************************* */
   /* 2) écoute et envoi de l'article au panier */
   /******************************************* */
@@ -121,7 +121,6 @@ function addProduct(color, quantity, id) {
   };
 }
 
-
 /* vérifications des entrées d'interface utilisateur et ajout*/
 
 function testInputs(color, quantity){
@@ -145,6 +144,7 @@ function SendOnClick() { /* envoi au panier */
   let quantity = document.getElementById("quantity").value;
   testInputs(color, quantity);
 }
+
 
 /* ********************** */
 /* CODE GLOBAL DE LA PAGE */

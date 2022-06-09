@@ -44,7 +44,6 @@ function displayQuantPrice(cartridge, i) {
     totalPr += (price*parseInt(cartridge[i].quantity, 10));
     document.getElementById("totalQuantity").textContent = totalQuant.toString();console.log("qté total affiché");
     document.getElementById("totalPrice").textContent = totalPr.toString();
-    console.log("qtotale", totalQuant ,"ptotal", totalPr)
 }
 
 /* fonction d'affichage complet d'UN produit grâce aux données de la requête et grâce au panier */
@@ -142,7 +141,6 @@ function globalDisplay() {
             .catch(errorReturn)//retour erreur
     }; 
 };
-
 
 
 /* ************************************ */

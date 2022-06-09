@@ -8,7 +8,6 @@
 
 /* fonction de création de la balise <a> qui englobe chaque article */
 function createBlockLinkArticle(newAnchor, productId, i) {
-    
     newAnchor.href = "./front/html/product.html?id=" + productId;//on lui attribue l'url de référence du lien (sa cible)
     newAnchor.id = "anchor" + i;//on affecte un id# unique à cette balise
     /* affectation de la balise <a> dans le html */
@@ -55,7 +54,6 @@ function displayAll(ArrayProduitsJson) {//affichage de tout le stock d'articles 
 /* fonction de récupération de promise */
 function getResData(res) {
     if (res.ok) {//vérifie true si succès de réponse
-        /* console.log("retour", res.json()) */
         return res.json();//retourne la méthode json de cette réponse (ultérieur ArrayProduitsJson)
     }
 }  
@@ -66,6 +64,7 @@ function errorReturn(err) {//récupération d'erreur si échec de réponse de la
     console.log(err);
 }
 
+
     /* **************************** */
     /* 2) CODE PRINCIPAL DE LA PAGE */
     /* **************************** */
@@ -73,9 +72,9 @@ function errorReturn(err) {//récupération d'erreur si échec de réponse de la
 /* Fonction globale de la page: on va requêter les données sur l'API, puis on extrait la réponse de promise au format JSON, puis on exploite toutes les données reçues pour l'affichage du stock d'articles, et enfin un retour d'erreur */
 function mainDisplay() {
     fetch("http://localhost:3000/api/products")//requete de promesse
-    .then(getResData) 
-    .then(displayAll)
-    .catch(errorReturn)
+    .then(getResData)//données de la reponse
+    .then(displayAll)//affichage global
+    .catch(errorReturn)//retour d'erreur
 }
 mainDisplay();//execution du code global
 
