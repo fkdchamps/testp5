@@ -207,8 +207,9 @@ function validForm() {
     /* bilan des test*/
         /* nouvelle écoute en cas d'erreur */
     if (errorExist===true) {
-        console.log("j'écoute à nouveau");
-        listenOrderButton()//écoute
+        /* console.log("j'écoute à nouveau");
+        listenOrderButton() *///écoute//hypothèse treatorder instead?
+        //definitivement ne rien faire
     }else{
         /* collecte et envoi si pas d'erreur*/
         collectData();
@@ -240,7 +241,7 @@ function sendPostOrder(){
     let conf=confirm("Félicitations!\nVous allez commander "+totalQuant+" canapé(s) pour la somme de "+totalPr+"€\nVeuillez confirmer");
     
     if (conf===false){
-      //do nothing
+        //or do nothing
     }else if (conf===true){
         fetch("http://localhost:3000/api/products/order", {//requête API d'envoi de commande asynchrone
             method: "POST",
