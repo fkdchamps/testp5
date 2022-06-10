@@ -204,6 +204,12 @@ function validForm() {
     else if (regXvarEmail.test(varEmail.value)===true) {
         document.getElementById("email"+"ErrorMsg").innerText="";
     };
+    /* couleur erreurs */
+    for(i=0; i<document.querySelectorAll('form.cart__order__form p').length;i++) {
+      document.querySelectorAll('form.cart__order__form p').item(i).style.color='#FCE21D';
+      document.querySelectorAll('form.cart__order__form p').item(i).style.border='1px solid';
+     
+    }
     /* bilan des test*/
         /* nouvelle écoute en cas d'erreur */
     if (errorExist===true) {
