@@ -206,9 +206,8 @@ function validForm() {
     };
     /* couleur erreurs */
     for(i=0; i<document.querySelectorAll('form.cart__order__form p').length;i++) {
-      document.querySelectorAll('form.cart__order__form p').item(i).style.color='#FCE21D';
-      document.querySelectorAll('form.cart__order__form p').item(i).style.border='1px solid';
-     
+      document.querySelectorAll('form.cart__order__form p').item(i).style.color='darkred';
+           
     }
     /* bilan des test*/
         /* nouvelle écoute en cas d'erreur */
